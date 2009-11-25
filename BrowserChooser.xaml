@@ -1,0 +1,65 @@
+﻿<Window x:Class="Browser_Chooser.BrowserChooser"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Browser_Chooser"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Name="This" Title="Browser Chooser" Height="241" Width="560" WindowStyle="ToolWindow" SizeToContent="Manual" ResizeMode="NoResize" BorderThickness="1"
+    Closing="Window_Closing">
+    <Window.Resources>
+        <local:BoolToVisibilityConverter x:Key="boolToVis" />
+        <Style TargetType="{x:Type TextBlock}" x:Key="GridBlockStyle">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Visibility" 
+                    Value="{Binding Path=IsSelected,
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}},
+                                    Converter={StaticResource boolToVis},
+                                    ConverterParameter=False}" />
+        </Style>
+        <Style TargetType="{x:Type FrameworkElement}" x:Key="GridEditStyle">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Visibility"
+                    Value="{Binding Path=IsSelected,
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}},
+                                    Converter={StaticResource boolToVis},
+                                    ConverterParameter=True}" />
+        </Style>
+    </Window.Resources>
+    <Grid Width="535" Height="205">
+        <Button HorizontalAlignment="Left" Margin="12,12,0,0" Name="add" Width="101" Height="23" VerticalAlignment="Top" Click="add_Click">Add</Button>
+        <Button Height="23" Margin="12,41,0,0" Name="delete" VerticalAlignment="Top" HorizontalAlignment="Left" Width="101" Click="delete_Click">Delete</Button>
+        <Separator Height="5" HorizontalAlignment="Left" Margin="14,70,0,0" Name="separator1" VerticalAlignment="Top" Width="99" />
+        <Button Margin="12,81,0,0" Name="moveUp" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Click="moveUp_Click">Move Up</Button>
+        <Button HorizontalAlignment="Left" Margin="12,110,0,0" Name="moveDown" Width="101" Height="23" VerticalAlignment="Top" Click="moveDown_Click">Move Down</Button>
+        <Button Height="23" Margin="12,0,0,12" Name="setAsDefault" VerticalAlignment="Bottom" Click="setAsDefault_Click" HorizontalAlignment="Left" Width="101">Set as Default</Button>
+        <ListView Margin="119,12,12,12" Name="listview" ItemsSource="{Binding BrowserRegexen}" SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  Mouse.MouseDown="listview_MouseDown"
+                  SelectionChanged="listview_SelectionChanged">
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn Width="250" Header ="Regex">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding Regex}" Style="{StaticResource GridBlockStyle}" />
+                                    <TextBox Text="{Binding Regex}" Style="{StaticResource GridEditStyle}" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150" Header="Browser">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Path=Browser}" Style="{StaticResource GridBlockStyle}" />
+                                    <ComboBox SelectedItem="{Binding Path=Browser}"
+                                              ItemsSource="{Binding ElementName=This, Path=Browsers}"
+                                              Style="{StaticResource GridEditStyle}" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
