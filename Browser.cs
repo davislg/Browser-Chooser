@@ -8,7 +8,7 @@ using Microsoft.Win32;
 
 namespace Browser_Chooser
 {
-    class Browser
+    static class Browser
     {
         private static string defaultBrowser;
         private static ObservableCollection<string> browsers = new ObservableCollection<string>();
@@ -36,10 +36,6 @@ namespace Browser_Chooser
                 browsers.Add(name);
                 browserToPath[name] = command;
             }
-        }
-
-        private Browser()
-        {
         }
 
         public static string Default
